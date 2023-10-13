@@ -16,6 +16,8 @@ namespace crud.Data
         public DbSet<Book> Books { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Address> Addresses { get; set; }
+        public DbSet<Order> Orders { get; set; }
+        public DbSet<OrderHistory> OrderHistories { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
