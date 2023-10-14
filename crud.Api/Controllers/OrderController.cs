@@ -132,19 +132,39 @@ namespace crud.Api.Controllers
              .ThenInclude(c => c.Address)     // Include the Address entity related to Customer
              .FirstOrDefault();
             var ordersHistory = await _context.OrderHistories.ToListAsync();
-
             return Ok(ordersHistory);
         }
 
         [HttpPost]
         public  void CreateOrder()
         {
-           
-            foreach (var order in orders)
+            /*
+             foreach (var order in orders)
+             {
+                 _context.Orders.Add(order);
+             }
+            */
+            Order order = new Order()
             {
-                _context.Orders.Add(order);
-            }
+                OrderID = 11,
+                CustomerID = 1,
+                Books = new List<Book>()
+                {
+                   new Book()
+                   {
+                        OrderId = 11,
+                        Title = "Harry Potter",
+                        Author = "j.k. rowling",
+                        Genre = "Fantasy",
+                        PublicationYear = 1997,
+                        ISBN = "11123",
+                        Price = 4,
+                        IsAvailableForRent = true
 
+                   }
+                },
+            };
+            _context.Add(order);
             _context.SaveChanges();
 
         }
