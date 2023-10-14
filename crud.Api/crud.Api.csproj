@@ -12,6 +12,11 @@
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
     <PackageReference Include="Bogus" Version="34.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.12">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.12" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,5 +29,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="Bogus" />
+    <None Remove="Microsoft.EntityFrameworkCore.Design" />
+    <None Remove="Microsoft.AspNetCore.Mvc.NewtonsoftJson" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Migrations\20231014065844_InitialCreate.cs" />
+    <Compile Remove="Migrations\20231014065844_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\UserDbContextModelSnapshot.cs" />
+    <Compile Remove="Migrations\20231014102914_InitialCreate2.Designer.cs" />
+    <Compile Remove="Migrations\20231014102914_InitialCreate2.cs" />
+    <Compile Remove="Migrations\20231014071429_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20231014071429_InitialCreate.cs" />
   </ItemGroup>
 </Project>

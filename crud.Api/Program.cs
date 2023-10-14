@@ -1,5 +1,8 @@
-﻿using crud.Data;
+﻿using System;
+using System.Text.Json.Serialization;
+using crud.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -7,10 +10,16 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 
-// Configure your DbContext to use the in-memory database
-builder.Services.AddDbContext<UserContext>(options =>
-    options.UseInMemoryDatabase(databaseName: "InMemoryDatabase"));
 
+
+builder.Services.AddDbContext<UserDbContext>(options =>
+{
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DataContext"), connectionOptions => { connectionOptions.EnableRetryOnFailure(2, TimeSpan.FromSeconds(5), null); });
+});
+builder.Services.AddControllersWithViews()
+    .AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
 // Configure Swagger/OpenAPI
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
