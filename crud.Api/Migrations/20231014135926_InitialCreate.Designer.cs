@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using crud.Data;
@@ -11,9 +12,11 @@ using crud.Data;
 namespace crud.Api.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    partial class UserDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231014135926_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,14 +38,12 @@ namespace crud.Api.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Country")
-                        .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<int>("CustomerId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("PostalCode")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("State")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -52,7 +53,10 @@ namespace crud.Api.Migrations
 
                     b.HasKey("AddressID");
 
-                    b.ToTable("Address");
+                    b.HasIndex("CustomerId")
+                        .IsUnique();
+
+                    b.ToTable("Addresses");
                 });
 
             modelBuilder.Entity("crud.Domain.Book", b =>
@@ -78,7 +82,7 @@ namespace crud.Api.Migrations
                     b.Property<bool>("IsAvailableForRent")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("OrderID")
+                    b.Property<int>("OrderId")
                         .HasColumnType("integer");
 
                     b.Property<decimal>("Price")
@@ -87,16 +91,13 @@ namespace crud.Api.Migrations
                     b.Property<int>("PublicationYear")
                         .HasColumnType("integer");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("BookID");
 
-                    b.HasIndex("OrderID");
+                    b.HasIndex("OrderId");
 
                     b.ToTable("Books");
                 });
@@ -108,9 +109,6 @@ namespace crud.Api.Migrations
                         .HasColumnType("integer");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CustomerID"));
-
-                    b.Property<int>("AddressID")
-                        .HasColumnType("integer");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -130,9 +128,6 @@ namespace crud.Api.Migrations
 
                     b.HasKey("CustomerID");
 
-                    b.HasIndex("AddressID")
-                        .IsUnique();
-
                     b.ToTable("Customers");
                 });
 
@@ -147,9 +142,6 @@ namespace crud.Api.Migrations
                     b.Property<int>("CustomerID")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<DateTime>("Timestamp")
                         .HasColumnType("timestamp with time zone");
 
@@ -160,26 +152,26 @@ namespace crud.Api.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("crud.Domain.Book", b =>
+            modelBuilder.Entity("crud.Domain.Address", b =>
                 {
-                    b.HasOne("crud.Domain.Order", "Order")
-                        .WithMany("Books")
-                        .HasForeignKey("OrderID")
+                    b.HasOne("crud.Domain.Customer", "Customer")
+                        .WithOne("Address")
+                        .HasForeignKey("crud.Domain.Address", "CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Order");
+                    b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("crud.Domain.Customer", b =>
+            modelBuilder.Entity("crud.Domain.Book", b =>
                 {
-                    b.HasOne("crud.Domain.Address", "Address")
-                        .WithOne("Customer")
-                        .HasForeignKey("crud.Domain.Customer", "AddressID")
+                    b.HasOne("crud.Domain.Order", "order")
+                        .WithMany("Books")
+                        .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Address");
+                    b.Navigation("order");
                 });
 
             modelBuilder.Entity("crud.Domain.Order", b =>
@@ -193,13 +185,11 @@ namespace crud.Api.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("crud.Domain.Address", b =>
-                {
-                    b.Navigation("Customer");
-                });
-
             modelBuilder.Entity("crud.Domain.Customer", b =>
                 {
+                    b.Navigation("Address")
+                        .IsRequired();
+
                     b.Navigation("Orders");
                 });
 

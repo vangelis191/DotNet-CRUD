@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using crud.Data;
@@ -11,9 +12,11 @@ using crud.Data;
 namespace crud.Api.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    partial class UserDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231015125220_InitialCreate")]
+    partial class InitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -130,8 +133,7 @@ namespace crud.Api.Migrations
 
                     b.HasKey("CustomerID");
 
-                    b.HasIndex("AddressID")
-                        .IsUnique();
+                    b.HasIndex("AddressID");
 
                     b.ToTable("Customers");
                 });
@@ -174,8 +176,8 @@ namespace crud.Api.Migrations
             modelBuilder.Entity("crud.Domain.Customer", b =>
                 {
                     b.HasOne("crud.Domain.Address", "Address")
-                        .WithOne("Customer")
-                        .HasForeignKey("crud.Domain.Customer", "AddressID")
+                        .WithMany()
+                        .HasForeignKey("AddressID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -190,11 +192,6 @@ namespace crud.Api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Customer");
-                });
-
-            modelBuilder.Entity("crud.Domain.Address", b =>
-                {
                     b.Navigation("Customer");
                 });
 

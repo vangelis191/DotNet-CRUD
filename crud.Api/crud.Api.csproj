@@ -40,5 +40,29 @@
     <Compile Remove="Migrations\20231014102914_InitialCreate2.cs" />
     <Compile Remove="Migrations\20231014071429_InitialCreate.Designer.cs" />
     <Compile Remove="Migrations\20231014071429_InitialCreate.cs" />
+    <Compile Remove="Migrations\20231014103842_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20231014103842_InitialCreate.cs" />
+    <Compile Remove="Migrations\20231014114027_InitialCreate2.Designer.cs" />
+    <Compile Remove="Migrations\20231014114027_InitialCreate2.cs" />
+    <Compile Remove="Migrations\20231014120031_InitialCreate3.Designer.cs" />
+    <Compile Remove="Migrations\20231014120031_InitialCreate3.cs" />
+    <Compile Remove="Migrations\20231014124948_InitialCreate4.Designer.cs" />
+    <Compile Remove="Migrations\20231014124948_InitialCreate4.cs" />
+    <Compile Remove="Migrations\20231014135212_InitialCreate5.Designer.cs" />
+    <Compile Remove="Migrations\20231014135212_InitialCreate5.cs" />
+    <Compile Remove="Migrations\20231014135926_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20231014135926_InitialCreate.cs" />
+    <Compile Remove="Migrations\20231014144638_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20231014144638_InitialCreate.cs" />
+    <Compile Remove="Migrations\20231014152142_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20231014152142_InitialCreate.cs" />
+    <Compile Remove="Migrations\20231014154316_InitialCreate2.Designer.cs" />
+    <Compile Remove="Migrations\20231014154316_InitialCreate2.cs" />
+    <Compile Remove="Migrations\20231014154641_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20231014154641_InitialCreate.cs" />
+    <Compile Remove="Migrations\20231014160814_InitialCreate2.Designer.cs" />
+    <Compile Remove="Migrations\20231014160814_InitialCreate2.cs" />
+    <Compile Remove="Migrations\20231015125220_InitialCreate.Designer.cs" />
+    <Compile Remove="Migrations\20231015125220_InitialCreate.cs" />
   </ItemGroup>
 </Project>
