@@ -41,33 +41,22 @@ namespace crud.Api.Controllers
             return Ok(orders);
         }
 
-   
+        [HttpGet("{CustomerID}")]
+        public async Task<ActionResult<ICollection<Order>>> GetOrderByCustomer(int CustomerID)
+        {
+
+            _context.Orders.Where(res => res.CustomerID == CustomerID).Include(a => a.Books)
+             .FirstOrDefault();
+            var orders = await _context.Orders.ToListAsync();
+
+            return Ok(orders);
+        }
+
+
 
         [HttpPost]
         public void CreateOrder(Order todoItem)
         {
-
-            Order order = new Order()
-            {
-                OrderID = 1,
-                CustomerID = 1,
-                Books = new List<Book>()
-                {
-                   new Book()
-                   {
-                        OrderID = 1,
-                        Title = "Harry Potter",
-                        Author = "j.k. rowling",
-                        Genre = "Fantasy",
-                        Quantity = 4,
-                        PublicationYear = 1997,
-                        ISBN = "11123",
-                        Price = 4,
-                        IsAvailableForRent = true
-
-                   }
-                },
-            };
             _context.Add(todoItem);
             _context.SaveChanges();
 
