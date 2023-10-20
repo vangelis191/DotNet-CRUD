@@ -3,6 +3,7 @@ namespace crud.Data
 {
     using System.Collections.Generic;
     using System.Reflection.Emit;
+    using System.Reflection.Metadata;
     using crud.Domain;
     using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,7 @@ namespace crud.Data
         public DbSet<Order> Orders { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Address> Address { get; set; }
+        public DbSet<SavedBook> SavedBooks { get; set; }
 
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -29,8 +31,31 @@ namespace crud.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            // Add any custom configurations or relationships here if needed
+
+            modelBuilder.Entity<Customer>()
+            .HasOne(e => e.Address)
+                .WithOne(e => e.Customer)
+            .HasForeignKey<Address>(e => e.CustomerID)
+            .IsRequired();
+
+
+            // Configure the many-to-many relationship between User and Book through SavedBook
+            modelBuilder.Entity<SavedBook>()
+                .HasKey(sb => new { sb.CustomerID, sb.BookId });
+
+            modelBuilder.Entity<SavedBook>()
+                .HasOne(sb => sb.Customer)
+                .WithMany(u => u.SavedBook)
+                .HasForeignKey(sb => sb.CustomerID);
+
+            modelBuilder.Entity<SavedBook>()
+                .HasOne(sb => sb.Book)
+                .WithMany(b => b.SavedBook)
+                .HasForeignKey(sb => sb.BookId);
+
         }
+
+
     }
 }
 

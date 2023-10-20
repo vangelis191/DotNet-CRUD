@@ -12,8 +12,8 @@ using crud.Data;
 namespace crud.Api.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    [Migration("20231014152142_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20231020173449_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,6 +41,9 @@ namespace crud.Api.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("CustomerID")
+                        .HasColumnType("integer");
+
                     b.Property<string>("PostalCode")
                         .IsRequired()
                         .HasColumnType("text");
@@ -55,7 +58,13 @@ namespace crud.Api.Migrations
 
                     b.HasKey("AddressID");
 
-                    b.ToTable("Address");
+                    b.HasIndex("CustomerID")
+                        .IsUnique();
+
+                    b.ToTable("Address", null, t =>
+                        {
+                            t.ExcludeFromMigrations();
+                        });
                 });
 
             modelBuilder.Entity("crud.Domain.Book", b =>
@@ -90,6 +99,9 @@ namespace crud.Api.Migrations
                     b.Property<int>("PublicationYear")
                         .HasColumnType("integer");
 
+                    b.Property<int>("Quantity")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("text");
@@ -103,12 +115,11 @@ namespace crud.Api.Migrations
 
             modelBuilder.Entity("crud.Domain.Customer", b =>
                 {
-                    b.Property<Guid>("CustomerID")
+                    b.Property<int>("CustomerID")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("AddressID")
                         .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CustomerID"));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -128,8 +139,6 @@ namespace crud.Api.Migrations
 
                     b.HasKey("CustomerID");
 
-                    b.HasIndex("AddressID");
-
                     b.ToTable("Customers");
                 });
 
@@ -144,9 +153,6 @@ namespace crud.Api.Migrations
                     b.Property<int>("CustomerID")
                         .HasColumnType("integer");
 
-                    b.Property<Guid?>("CustomerID1")
-                        .HasColumnType("uuid");
-
                     b.Property<DateTime>("OrderDate")
                         .HasColumnType("timestamp with time zone");
 
@@ -155,9 +161,38 @@ namespace crud.Api.Migrations
 
                     b.HasKey("OrderID");
 
-                    b.HasIndex("CustomerID1");
+                    b.HasIndex("CustomerID");
 
-                    b.ToTable("Users");
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("crud.Domain.SavedBook", b =>
+                {
+                    b.Property<int>("CustomerID")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SavedBookId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("CustomerID", "BookId");
+
+                    b.HasIndex("BookId");
+
+                    b.ToTable("SavedBooks");
+                });
+
+            modelBuilder.Entity("crud.Domain.Address", b =>
+                {
+                    b.HasOne("crud.Domain.Customer", "Customer")
+                        .WithOne("Address")
+                        .HasForeignKey("crud.Domain.Address", "CustomerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("crud.Domain.Book", b =>
@@ -171,29 +206,48 @@ namespace crud.Api.Migrations
                     b.Navigation("Order");
                 });
 
-            modelBuilder.Entity("crud.Domain.Customer", b =>
-                {
-                    b.HasOne("crud.Domain.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Address");
-                });
-
             modelBuilder.Entity("crud.Domain.Order", b =>
                 {
                     b.HasOne("crud.Domain.Customer", "Customer")
                         .WithMany("Orders")
-                        .HasForeignKey("CustomerID1");
+                        .HasForeignKey("CustomerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Customer");
                 });
 
+            modelBuilder.Entity("crud.Domain.SavedBook", b =>
+                {
+                    b.HasOne("crud.Domain.Book", "Book")
+                        .WithMany("SavedBook")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("crud.Domain.Customer", "Customer")
+                        .WithMany("SavedBook")
+                        .HasForeignKey("CustomerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("crud.Domain.Book", b =>
+                {
+                    b.Navigation("SavedBook");
+                });
+
             modelBuilder.Entity("crud.Domain.Customer", b =>
                 {
+                    b.Navigation("Address");
+
                     b.Navigation("Orders");
+
+                    b.Navigation("SavedBook");
                 });
 
             modelBuilder.Entity("crud.Domain.Order", b =>

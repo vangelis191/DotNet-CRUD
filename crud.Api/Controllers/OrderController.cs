@@ -62,6 +62,21 @@ namespace crud.Api.Controllers
 
         }
 
+        [HttpPost("customer")]
+        public void CreateCustomer(Customer customer)
+        {
+            _context.Add(customer);
+            _context.SaveChanges();
+
+        }
+
+        [HttpPost("address")]
+        public void CreateAddress(Domain.Address address)
+        {
+            _context.Add(address);
+            _context.SaveChanges();
+
+        }
 
         [HttpDelete()]
         public async Task<ActionResult<ICollection<Order>>> Delete(int orderID)

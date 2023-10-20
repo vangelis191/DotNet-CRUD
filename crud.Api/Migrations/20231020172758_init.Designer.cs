@@ -12,8 +12,8 @@ using crud.Data;
 namespace crud.Api.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    [Migration("20231014160814_InitialCreate2")]
-    partial class InitialCreate2
+    [Migration("20231020172758_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -41,6 +41,9 @@ namespace crud.Api.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<int>("CustomerID")
+                        .HasColumnType("integer");
+
                     b.Property<string>("PostalCode")
                         .IsRequired()
                         .HasColumnType("text");
@@ -55,7 +58,13 @@ namespace crud.Api.Migrations
 
                     b.HasKey("AddressID");
 
-                    b.ToTable("Address");
+                    b.HasIndex("CustomerID")
+                        .IsUnique();
+
+                    b.ToTable("Address", null, t =>
+                        {
+                            t.ExcludeFromMigrations();
+                        });
                 });
 
             modelBuilder.Entity("crud.Domain.Book", b =>
@@ -112,9 +121,6 @@ namespace crud.Api.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CustomerID"));
 
-                    b.Property<int>("AddressID")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("text");
@@ -132,8 +138,6 @@ namespace crud.Api.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("CustomerID");
-
-                    b.HasIndex("AddressID");
 
                     b.ToTable("Customers");
                 });
@@ -162,6 +166,35 @@ namespace crud.Api.Migrations
                     b.ToTable("Orders");
                 });
 
+            modelBuilder.Entity("crud.Domain.SavedBook", b =>
+                {
+                    b.Property<int>("CustomerID")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SavedBookId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("CustomerID", "BookId");
+
+                    b.HasIndex("BookId");
+
+                    b.ToTable("SavedBooks");
+                });
+
+            modelBuilder.Entity("crud.Domain.Address", b =>
+                {
+                    b.HasOne("crud.Domain.Customer", "Customer")
+                        .WithOne("Address")
+                        .HasForeignKey("crud.Domain.Address", "CustomerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
             modelBuilder.Entity("crud.Domain.Book", b =>
                 {
                     b.HasOne("crud.Domain.Order", "Order")
@@ -171,17 +204,6 @@ namespace crud.Api.Migrations
                         .IsRequired();
 
                     b.Navigation("Order");
-                });
-
-            modelBuilder.Entity("crud.Domain.Customer", b =>
-                {
-                    b.HasOne("crud.Domain.Address", "Address")
-                        .WithMany()
-                        .HasForeignKey("AddressID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Address");
                 });
 
             modelBuilder.Entity("crud.Domain.Order", b =>
@@ -195,9 +217,37 @@ namespace crud.Api.Migrations
                     b.Navigation("Customer");
                 });
 
+            modelBuilder.Entity("crud.Domain.SavedBook", b =>
+                {
+                    b.HasOne("crud.Domain.Book", "Book")
+                        .WithMany("SavedBook")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("crud.Domain.Customer", "Customer")
+                        .WithMany("SavedBook")
+                        .HasForeignKey("CustomerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
+                    b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("crud.Domain.Book", b =>
+                {
+                    b.Navigation("SavedBook");
+                });
+
             modelBuilder.Entity("crud.Domain.Customer", b =>
                 {
+                    b.Navigation("Address");
+
                     b.Navigation("Orders");
+
+                    b.Navigation("SavedBook");
                 });
 
             modelBuilder.Entity("crud.Domain.Order", b =>

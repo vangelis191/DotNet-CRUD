@@ -18,10 +18,10 @@ namespace crud.Domain
         public decimal Price { get; set; } = 2.0m;
         public bool IsAvailableForRent { get; set; } = true;
 
-        public int OrderID { get; set; }
-
         [JsonIgnore]
         public Order? Order { get; set; } = null!;
+        public List<SavedBook> SavedBook { get; } = new();
     }
+
 }
 

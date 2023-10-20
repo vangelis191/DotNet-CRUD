@@ -31,6 +31,7 @@
     <None Remove="Bogus" />
     <None Remove="Microsoft.EntityFrameworkCore.Design" />
     <None Remove="Microsoft.AspNetCore.Mvc.NewtonsoftJson" />
+    <None Remove="Migrations\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Migrations\20231014065844_InitialCreate.cs" />
@@ -64,5 +65,26 @@
     <Compile Remove="Migrations\20231014160814_InitialCreate2.cs" />
     <Compile Remove="Migrations\20231015125220_InitialCreate.Designer.cs" />
     <Compile Remove="Migrations\20231015125220_InitialCreate.cs" />
+    <Compile Remove="Migrations\20231020163914_init.Designer.cs" />
+    <Compile Remove="Migrations\20231020163914_init.cs" />
+    <Compile Remove="Migrations\20231020171901_changeAdressRef.Designer.cs" />
+    <Compile Remove="Migrations\20231020171901_changeAdressRef.cs" />
+    <Compile Remove="Migrations\UserDbContextModelSnapshot.cs" />
+    <Compile Remove="Migrations\20231020172359_INIT.Designer.cs" />
+    <Compile Remove="Migrations\20231020172359_INIT.cs" />
+    <Compile Remove="Migrations\20231020172601_init.Designer.cs" />
+    <Compile Remove="Migrations\20231020172601_init.cs" />
+    <Compile Remove="Migrations\UserDbContextModelSnapshot.cs" />
+    <Compile Remove="Migrations\20231020172758_init.Designer.cs" />
+    <Compile Remove="Migrations\20231020172758_init.cs" />
+    <Compile Remove="Migrations\20231020173449_init.Designer.cs" />
+    <Compile Remove="Migrations\20231020173449_init.cs" />
+    <Compile Remove="Migrations\20231020173920_init.Designer.cs" />
+    <Compile Remove="Migrations\20231020173920_init.cs" />
+    <Compile Remove="Migrations\20231020175111_init.Designer.cs" />
+    <Compile Remove="Migrations\20231020175111_init.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 </Project>

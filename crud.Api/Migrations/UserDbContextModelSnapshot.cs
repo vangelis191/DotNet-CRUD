@@ -38,11 +38,10 @@ namespace crud.Api.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("PostalCode")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("CustomerID")
+                        .HasColumnType("integer");
 
-                    b.Property<string>("State")
+                    b.Property<string>("PostalCode")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -51,6 +50,9 @@ namespace crud.Api.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("AddressID");
+
+                    b.HasIndex("CustomerID")
+                        .IsUnique();
 
                     b.ToTable("Address");
                 });
@@ -78,7 +80,7 @@ namespace crud.Api.Migrations
                     b.Property<bool>("IsAvailableForRent")
                         .HasColumnType("boolean");
 
-                    b.Property<int>("OrderID")
+                    b.Property<int?>("OrderID")
                         .HasColumnType("integer");
 
                     b.Property<decimal>("Price")
@@ -109,9 +111,6 @@ namespace crud.Api.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("CustomerID"));
 
-                    b.Property<int>("AddressID")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("text");
@@ -129,9 +128,6 @@ namespace crud.Api.Migrations
                         .HasColumnType("text");
 
                     b.HasKey("CustomerID");
-
-                    b.HasIndex("AddressID")
-                        .IsUnique();
 
                     b.ToTable("Customers");
                 });
@@ -160,26 +156,42 @@ namespace crud.Api.Migrations
                     b.ToTable("Orders");
                 });
 
+            modelBuilder.Entity("crud.Domain.SavedBook", b =>
+                {
+                    b.Property<int>("CustomerID")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("BookId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("SavedBookId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("CustomerID", "BookId");
+
+                    b.HasIndex("BookId");
+
+                    b.ToTable("SavedBooks");
+                });
+
+            modelBuilder.Entity("crud.Domain.Address", b =>
+                {
+                    b.HasOne("crud.Domain.Customer", "Customer")
+                        .WithOne("Address")
+                        .HasForeignKey("crud.Domain.Address", "CustomerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
             modelBuilder.Entity("crud.Domain.Book", b =>
                 {
                     b.HasOne("crud.Domain.Order", "Order")
                         .WithMany("Books")
-                        .HasForeignKey("OrderID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("OrderID");
 
                     b.Navigation("Order");
-                });
-
-            modelBuilder.Entity("crud.Domain.Customer", b =>
-                {
-                    b.HasOne("crud.Domain.Address", "Address")
-                        .WithOne("Customer")
-                        .HasForeignKey("crud.Domain.Customer", "AddressID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Address");
                 });
 
             modelBuilder.Entity("crud.Domain.Order", b =>
@@ -193,14 +205,37 @@ namespace crud.Api.Migrations
                     b.Navigation("Customer");
                 });
 
-            modelBuilder.Entity("crud.Domain.Address", b =>
+            modelBuilder.Entity("crud.Domain.SavedBook", b =>
                 {
+                    b.HasOne("crud.Domain.Book", "Book")
+                        .WithMany("SavedBook")
+                        .HasForeignKey("BookId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("crud.Domain.Customer", "Customer")
+                        .WithMany("SavedBook")
+                        .HasForeignKey("CustomerID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Book");
+
                     b.Navigation("Customer");
+                });
+
+            modelBuilder.Entity("crud.Domain.Book", b =>
+                {
+                    b.Navigation("SavedBook");
                 });
 
             modelBuilder.Entity("crud.Domain.Customer", b =>
                 {
+                    b.Navigation("Address");
+
                     b.Navigation("Orders");
+
+                    b.Navigation("SavedBook");
                 });
 
             modelBuilder.Entity("crud.Domain.Order", b =>

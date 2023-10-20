@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace crud.Domain
 {
@@ -12,9 +13,13 @@ namespace crud.Domain
         public string Email { get; set; }
         public string Phone { get; set; }
 
-        public int AddressID { get; set; }
-        public Address Address { get; set; }
-        public ICollection<Order> Orders { get; set; } = null!;
+
+        [JsonIgnore]
+        public Address? Address { get; set; }
+
+        [JsonIgnore]
+        public ICollection<Order>? Orders { get; set; } = null!;
+        public List<SavedBook>? SavedBook { get; } = new();
     }
 }
 
