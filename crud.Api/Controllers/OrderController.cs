@@ -44,11 +44,8 @@ namespace crud.Api.Controllers
    
 
         [HttpPost]
-        public void CreateOrder()
+        public void CreateOrder(Order todoItem)
         {
-
-           
-
 
             Order order = new Order()
             {
@@ -71,7 +68,7 @@ namespace crud.Api.Controllers
                    }
                 },
             };
-            _context.Add(order);
+            _context.Add(todoItem);
             _context.SaveChanges();
 
         }

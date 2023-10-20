@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Reflection.Metadata;
+using System.Text.Json.Serialization;
 
 namespace crud.Domain
 {
@@ -17,8 +18,10 @@ namespace crud.Domain
         public decimal Price { get; set; } = 2.0m;
         public bool IsAvailableForRent { get; set; } = true;
 
-        public int OrderID { get; set; } // Required foreign key property
-        public Order Order { get; set; } = null!; // Required reference navigation to principal
+        public int OrderID { get; set; }
+
+        [JsonIgnore]
+        public Order? Order { get; set; } = null!;
     }
 }
 

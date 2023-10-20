@@ -13,8 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "02.Data", "02.Data", "{CB08
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "crud.Data", "crud.Data\crud.Data.csproj", "{BFECFD9A-2D9F-4923-8E87-DEC0E2238088}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "crud.Domain", "crud.Data\crud.Domain\crud.Domain.csproj", "{E2CEB740-D48C-4F15-97F1-B62AD638C6EB}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "crud.Domain", "crud.Domain\crud.Domain.csproj", "{C88686CB-4E91-4F90-B48F-4CF94A30D297}"
 EndProject
 Global
